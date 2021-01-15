@@ -11,7 +11,7 @@ def ConvertTrackerToTransform(trackerNode):
         nuke.message("selected node can't be used")
     else:
 
-        #Checks all the nodes in the Nuke Scripts, used to find the newly created node
+        #Checks all the nodes in the Nuke Scripts. Used to find the newly created node
         setAllNodesInNukeScriptBefore = {}
         setAllNodesInNukeScriptAfter = {}
         setAllNodesInNukeScriptBefore = set(nuke.allNodes())
@@ -20,7 +20,7 @@ def ConvertTrackerToTransform(trackerNode):
         trackerNode.knob("cornerPinOptions").setValue('Transform (match-move, baked)')
         trackerNode.knob('createCornerPin').execute()
         
-        #Finds the new transform node
+        #Finds the newly created transform node
         setAllNodesInNukeScriptAfter = set(nuke.allNodes())
         transformNode = (setAllNodesInNukeScriptAfter - setAllNodesInNukeScriptBefore) 
         
