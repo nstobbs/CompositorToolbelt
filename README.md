@@ -6,7 +6,7 @@ Currently the fuctions in this repro is:
 Convert Tracker to Transform.
 
 This functions will create a match-move transform node from a tracker node and will set up motion blur.
-This function can be accessed with the 'shift + t' hotkey or throught the custom tools menu.
+This can be accessed with the 'shift + t' hotkey or throught the custom tools menu.
 
 Roto Blur.
 
