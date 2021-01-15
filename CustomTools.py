@@ -8,7 +8,7 @@ def ConvertTrackerToTransform(trackerNode):
     try:
         nodeName.index('Tracker')
     except ValueError:
-        nuke.message("Selected node can't be used")
+        nuke.message("selected node can't be used")
     else:
 
         #Checks all the nodes in the Nuke Scripts, used to find the newly created node
@@ -20,7 +20,7 @@ def ConvertTrackerToTransform(trackerNode):
         trackerNode.knob("cornerPinOptions").setValue('Transform (match-move, baked)')
         trackerNode.knob('createCornerPin').execute()
         
-        #Finds the new transform 
+        #Finds the new transform node
         setAllNodesInNukeScriptAfter = set(nuke.allNodes())
         transformNode = (setAllNodesInNukeScriptAfter - setAllNodesInNukeScriptBefore) 
         
@@ -40,8 +40,6 @@ def rotoBlur():
     blurNode = nuke.createNode("Blur", inpanel= False)
     blurNode.knob("size").setValue(2)
     blurNode.knob('channels').setValue('alpha')
-
-    #Moves the blur node down for 5 units
     blurNode.setYpos(blurNode.ypos() + 5)
 
 def buildCustomMenu():
@@ -49,5 +47,5 @@ def buildCustomMenu():
     #Creates the Custom Meun inside of Nuke's UI
     menuBar = nuke.menu("Nuke")
     customMenu = menuBar.addMenu("CustomTools")
-    customMenu.addCommand("Roto | Blur", "CustomTools.rotoBlur()", "o")
+    customMenu.addCommand("RotoBlur", "CustomTools.rotoBlur()", "o")
     customMenu.addCommand("Convert Tracker to Transform", "CustomTools.ConvertTrackerToTransform(trackerNode = nuke.selectedNode())", "shift+t")
