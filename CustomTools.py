@@ -1,7 +1,7 @@
 import nuke
 
 def ConvertTrackerToTransform(trackerNode):
-    
+
     #Checks that the node is a Tracker Node
     nodeName = trackerNode.name()
     
@@ -16,11 +16,36 @@ def ConvertTrackerToTransform(trackerNode):
         setAllNodesInNukeScriptAfter = {}
         setAllNodesInNukeScriptBefore = set(nuke.allNodes())
 
-        #Change the settings of the Tracker to export a Transform Node
-        trackerNode.knob("cornerPinOptions").setValue('Transform (match-move, baked)')
-        trackerNode.knob('createCornerPin').execute()
+        #Create a panel that allows users to pick match-move or stabilize transform
+        transformOptionNum = 0
+        transformOptionPanel = nuke.Panel('transformOptionPanel')
+        transformOptionPanel.addButton('Match-move', 'match-move', 'transformOptionNum + 1')      
+        transformOptionPanel.addButton('Stabilize', 'stabilize', 'transformOptionNum + 2')
+        transformOptionPanel.show()
+
+        if transformOptionNum == 1:
+
+            #Change the settings of the Tracker to export a Transform Node ()
+            transformOptionNum = 0
+            trackerNode.knob("cornerPinOptions").setValue('Transform (match-move, baked)')
+            trackerNode.knob('createCornerPin').execute()
+
+            #Finds the newly created transform node, Change this to a inner function
+            setAllNodesInNukeScriptAfter = set(nuke.allNodes())
+            transformNode = (setAllNodesInNukeScriptAfter - setAllNodesInNukeScriptBefore) 
+            
+            #Turns on motion blur on the Transform node
+            for nodes in transformNode:
+                nodes.knob('shutteroffset').setValue('centred')
+                nodes.knob('motionblur').setValue(0)
+
+        elif transformOptionNum == 2:
+            #Change the settings of the Tracker to export a Transform Node ()
+            transformOptionNum = 0
+            trackerNode.knob("cornerPinOptions").setValue('Transform (stabilize, baked)')
+            trackerNode.knob('createCornerPin').execute()
         
-        #Finds the newly created transform node
+        #Finds the newly created transform node, Change this to a inner function
         setAllNodesInNukeScriptAfter = set(nuke.allNodes())
         transformNode = (setAllNodesInNukeScriptAfter - setAllNodesInNukeScriptBefore) 
         
