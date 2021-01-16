@@ -17,16 +17,14 @@ def ConvertTrackerToTransform(trackerNode):
         setAllNodesInNukeScriptBefore = set(nuke.allNodes())
 
         #Create a panel that allows users to pick match-move or stabilize transform
-        transformOptionNum = 0
         transformOptionPanel = nuke.Panel('transformOptionPanel')
-        transformOptionPanel.addButton('Match-move', 'match-move', 'transformOptionNum + 1')      
-        transformOptionPanel.addButton('Stabilize', 'stabilize', 'transformOptionNum + 2')
+        buttonMatch = transformOptionPanel.addButton('Match-move')    
+        buttonStab = transformOptionPanel.addButton('Stabilize')
         transformOptionPanel.show()
 
-        if transformOptionNum == 1:
+        if buttonMatch == True:
 
             #Change the settings of the Tracker to export a Transform Node ()
-            transformOptionNum = 0
             trackerNode.knob("cornerPinOptions").setValue('Transform (match-move, baked)')
             trackerNode.knob('createCornerPin').execute()
 
@@ -39,20 +37,20 @@ def ConvertTrackerToTransform(trackerNode):
                 nodes.knob('shutteroffset').setValue('centred')
                 nodes.knob('motionblur').setValue(0)
 
-        elif transformOptionNum == 2:
+        elif buttonStab == True:
+
             #Change the settings of the Tracker to export a Transform Node ()
-            transformOptionNum = 0
             trackerNode.knob("cornerPinOptions").setValue('Transform (stabilize, baked)')
             trackerNode.knob('createCornerPin').execute()
         
-        #Finds the newly created transform node, Change this to a inner function
-        setAllNodesInNukeScriptAfter = set(nuke.allNodes())
-        transformNode = (setAllNodesInNukeScriptAfter - setAllNodesInNukeScriptBefore) 
-        
-        #Turns on motion blur on the Transform node
-        for nodes in transformNode:
-            nodes.knob('shutteroffset').setValue('centred')
-            nodes.knob('motionblur').setValue(1)
+            #Finds the newly created transform node, Change this to a inner function
+            setAllNodesInNukeScriptAfter = set(nuke.allNodes())
+            transformNode = (setAllNodesInNukeScriptAfter - setAllNodesInNukeScriptBefore) 
+            
+            #Turns on motion blur on the Transform node
+            for nodes in transformNode:
+                nodes.knob('shutteroffset').setValue('centred')
+                nodes.knob('motionblur').setValue(1)
 
 def rotoBlur():
 
