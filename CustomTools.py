@@ -14,10 +14,10 @@ def ConvertTrackerToTransform(trackerNode):
         #Checks all the nodes in the Nuke Scripts. Used to find the newly created node
         setAllNodesInCompBefore = set(nuke.allNodes())
 
-        def matchmoveExport():
+        def ExportNode(TransformType, motionBlurAmount):
 
             #Change the settings of the Tracker to export a Transform Node ()
-            trackerNode.knob("cornerPinOptions").setValue('Transform (match-move, baked)')
+            trackerNode.knob("cornerPinOptions").setValue(TransformType)
             trackerNode.knob('createCornerPin').execute()
 
             #Finds the newly created transform node, Change this to a inner function
@@ -27,38 +27,22 @@ def ConvertTrackerToTransform(trackerNode):
             #Turns on motion blur on the Transform node
             for nodes in transformNode:
                 nodes.knob('shutteroffset').setValue('centred')
-                nodes.knob('motionblur').setValue(0)
-
-        def stabilizeExport():
-
-            #Change the settings of the Tracker to export a Transform Node ()
-            trackerNode.knob("cornerPinOptions").setValue('Transform (stabilize, baked)')
-            trackerNode.knob('createCornerPin').execute()
-        
-            #Finds the newly created transform node, Change this to a inner function
-            setAllNodesInCompAfter = set(nuke.allNodes())
-            transformNode = (setAllNodesInCompAfter - setAllNodesInCompBefore) 
-            
-            #Turns on motion blur on the Transform node
-            for nodes in transformNode:
-                nodes.knob('shutteroffset').setValue('centred')
-                nodes.knob('motionblur').setValue(1)
+                nodes.knob('motionblur').setValue(motionBlurAmount)
 
         def buildTransformOptionPanel():
 
             #Create a panel that allows users to pick match-move or stabilize transform
-            transformOptionPanel = nuke.Panel('transformOptionPanel')
+            transformOptionPanel = nuke.Panel('Export Node')
             transformOptionPanel.addButton('Match-move')
             transformOptionPanel.addButton('Stabilize')
             return transformOptionPanel, transformOptionPanel.show()
 
     (p,panelResults) = buildTransformOptionPanel()
-
     if panelResults == 0:
-        matchmoveExport()
+        ExportNode('Transform (match-move, baked)', 1)
     elif panelResults == 1:
-        stabilizeExport()
-        
+        ExportNode('Transform (stabilize, baked)', 0)
+            
 
 def rotoBlur():
 
