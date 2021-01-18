@@ -37,11 +37,12 @@ def ConvertTrackerToTransform(trackerNode):
             transformOptionPanel.addButton('Stabilize')
             return transformOptionPanel, transformOptionPanel.show()
 
-    (p,panelResults) = buildTransformOptionPanel()
-    if panelResults == 0:
-        ExportNode('Transform (match-move, baked)', 1)
-    elif panelResults == 1:
-        ExportNode('Transform (stabilize, baked)', 0)
+        (p,panelResults) = buildTransformOptionPanel()
+        
+        if panelResults == 0:
+            ExportNode('Transform (match-move, baked)', 1)
+        elif panelResults == 1:
+            ExportNode('Transform (stabilize, baked)', 0)
             
 
 def rotoBlur():
