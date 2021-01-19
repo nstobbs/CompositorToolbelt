@@ -1,5 +1,59 @@
 import nuke
 
+#Create a function that will create a write node ready to render 
+def writeOutToCompSaves(rootName, renderType):
+
+    #Finds the Comp's filepath and creates a write node
+    writeNode = nuke.createNode('Write')
+
+    def generateFilePath(rootName, renderType):
+
+
+        lastSlash = rootName.rfind('/')
+        folderOfComp = rootName.replace(rootName[(lastSlash+1):len(rootName)], "")
+        compName_nknc = rootName[(lastSlash+1):len(rootName)]
+        compName = compName_nknc.replace(compName_nknc[compName_nknc.rfind("."):], "")
+
+        finalOutputFilePath = folderOfComp + "renders" + "/" + renderType + "/" + compName + "/" + compName + ".####." + renderType
+
+        print(rootName, "_rootName")
+        print(folderOfComp, "_folderOfComp")
+        print(compName_nknc, "_compName_nknc")
+        print(compName, "_compName")
+        print(renderType, "_renderType")
+        print(finalOutputFilePath, "_finalOutputFilePath")
+        return finalOutputFilePath
+
+
+    def jpegExportSettings(rootName, renderType):
+        
+        #Changes settings for exporting out jpegs
+        writeNode.knob('file').setValue(generateFilePath(rootName, renderType))
+        writeNode.knob('file_type').setValue("JPEG")
+        writeNode.knob('_jpeg_sub_sampling').setValue("4:4:4")
+        writeNode.knob('_jpeg_quality').setValue(1.0)
+    
+    def dpxExportSettings(rootName, renderType):
+
+        #Changes settings for exporting out DPX
+        writeNode.knob('file').setValue(generateFilePath(rootName, renderType))
+        writeNode.knob('file_type').setValue("DPX")
+
+    def buildCustomPanel():
+
+        writeOutToCompSaveFolderPanel= nuke.Panel('Render Out')
+        writeOutToCompSaveFolderPanel.addButton('JPEG')
+        writeOutToCompSaveFolderPanel.addButton('DPX')
+        return writeOutToCompSaveFolderPanel, writeOutToCompSaveFolderPanel.show()
+
+    (p,panelResultsWrite) = buildCustomPanel()
+
+    if panelResultsWrite == 0:
+        jpegExportSettings(nuke.root().name(), "jpeg")
+    elif panelResultsWrite == 1:
+        dpxExportSettings(nuke.root().name(), "dpx")
+
+
 def ConvertTrackerToTransform(trackerNode):
 
     #Checks that the node is a Tracker Node
