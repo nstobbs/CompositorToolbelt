@@ -1,13 +1,15 @@
 import nuke
 
 #Create a function that will create a write node ready to render 
-def writeOutToCompSaves(rootName, renderType):
+def writeOutToCompSaves():
 
     #Finds the Comp's filepath and creates a write node
     writeNode = nuke.createNode('Write')
+    writeNode.showControlPanel()
+    writeNode.knob("create_directories").setValue(True)
+    rootName = nuke.root().name()
 
-    def generateFilePath(rootName, renderType):
-
+    def generateFilePath(renderType):
 
         lastSlash = rootName.rfind('/')
         folderOfComp = rootName.replace(rootName[(lastSlash+1):len(rootName)], "")
@@ -16,32 +18,28 @@ def writeOutToCompSaves(rootName, renderType):
 
         finalOutputFilePath = folderOfComp + "renders" + "/" + renderType + "/" + compName + "/" + compName + ".####." + renderType
 
-        print(rootName, "_rootName")
-        print(folderOfComp, "_folderOfComp")
-        print(compName_nknc, "_compName_nknc")
-        print(compName, "_compName")
-        print(renderType, "_renderType")
-        print(finalOutputFilePath, "_finalOutputFilePath")
         return finalOutputFilePath
 
-
-    def jpegExportSettings(rootName, renderType):
+    def jpegExportSettings(renderType='jpeg'):
         
         #Changes settings for exporting out jpegs
-        writeNode.knob('file').setValue(generateFilePath(rootName, renderType))
+        writeNode.knob('file').setValue(generateFilePath(renderType))
         writeNode.knob('file_type').setValue("JPEG")
         writeNode.knob('_jpeg_sub_sampling').setValue("4:4:4")
         writeNode.knob('_jpeg_quality').setValue(1.0)
-    
-    def dpxExportSettings(rootName, renderType):
+        writeNode.knob('Render').execute()
+
+    def dpxExportSettings(renderType='dpx'):
 
         #Changes settings for exporting out DPX
-        writeNode.knob('file').setValue(generateFilePath(rootName, renderType))
+        writeNode.knob('file').setValue(generateFilePath(renderType))
         writeNode.knob('file_type').setValue("DPX")
+        writeNode.knob('Render').execute()
 
     def buildCustomPanel():
 
         writeOutToCompSaveFolderPanel= nuke.Panel('Render Out')
+        writeOutToCompSaveFolderPanel.setTitle("Select file type")
         writeOutToCompSaveFolderPanel.addButton('JPEG')
         writeOutToCompSaveFolderPanel.addButton('DPX')
         return writeOutToCompSaveFolderPanel, writeOutToCompSaveFolderPanel.show()
@@ -49,9 +47,9 @@ def writeOutToCompSaves(rootName, renderType):
     (p,panelResultsWrite) = buildCustomPanel()
 
     if panelResultsWrite == 0:
-        jpegExportSettings(nuke.root().name(), "jpeg")
+        jpegExportSettings()
     elif panelResultsWrite == 1:
-        dpxExportSettings(nuke.root().name(), "dpx")
+        dpxExportSettings()
 
 
 def ConvertTrackerToTransform(trackerNode):
@@ -87,6 +85,7 @@ def ConvertTrackerToTransform(trackerNode):
 
             #Create a panel that allows users to pick match-move or stabilize transform
             transformOptionPanel = nuke.Panel('Export Node')
+            transformOptionPanel.setTitle("Select Transform")
             transformOptionPanel.addButton('Match-move')
             transformOptionPanel.addButton('Stabilize')
             return transformOptionPanel, transformOptionPanel.show()
@@ -119,3 +118,4 @@ def buildCustomMenu():
     customMenu = menuBar.addMenu("CustomTools")
     customMenu.addCommand("RotoBlur", "CustomTools.rotoBlur()", "o")
     customMenu.addCommand("Convert Tracker to Transform", "CustomTools.ConvertTrackerToTransform(trackerNode = nuke.selectedNode())", "shift+t")
+    customMenu.addCommand("Render Near Comp", "CustomTools.writeOutToCompSaves()", "shift+w")
