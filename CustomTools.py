@@ -1,5 +1,57 @@
 import nuke
 
+#Create a function that will create a write node ready to render 
+def writeOutToCompSaves():
+
+    #Finds the Comp's filepath and creates a write node
+    writeNode = nuke.createNode('Write')
+    writeNode.showControlPanel()
+    writeNode.knob("create_directories").setValue(True)
+    rootName = nuke.root().name()
+
+    def generateFilePath(renderType):
+
+        lastSlash = rootName.rfind('/')
+        folderOfComp = rootName.replace(rootName[(lastSlash+1):len(rootName)], "")
+        compName_nknc = rootName[(lastSlash+1):len(rootName)]
+        compName = compName_nknc.replace(compName_nknc[compName_nknc.rfind("."):], "")
+
+        finalOutputFilePath = folderOfComp + "renders" + "/" + renderType + "/" + compName + "/" + compName + ".####." + renderType
+
+        return finalOutputFilePath
+
+    def jpegExportSettings(renderType='jpeg'):
+        
+        #Changes settings for exporting out jpegs
+        writeNode.knob('file').setValue(generateFilePath(renderType))
+        writeNode.knob('file_type').setValue("JPEG")
+        writeNode.knob('_jpeg_sub_sampling').setValue("4:4:4")
+        writeNode.knob('_jpeg_quality').setValue(1.0)
+        writeNode.knob('Render').execute()
+
+    def dpxExportSettings(renderType='dpx'):
+
+        #Changes settings for exporting out DPX
+        writeNode.knob('file').setValue(generateFilePath(renderType))
+        writeNode.knob('file_type').setValue("DPX")
+        writeNode.knob('Render').execute()
+
+    def buildCustomPanel():
+
+        writeOutToCompSaveFolderPanel= nuke.Panel('Render Out')
+        writeOutToCompSaveFolderPanel.setTitle("Select file type")
+        writeOutToCompSaveFolderPanel.addButton('JPEG')
+        writeOutToCompSaveFolderPanel.addButton('DPX')
+        return writeOutToCompSaveFolderPanel, writeOutToCompSaveFolderPanel.show()
+
+    (p,panelResultsWrite) = buildCustomPanel()
+
+    if panelResultsWrite == 0:
+        jpegExportSettings()
+    elif panelResultsWrite == 1:
+        dpxExportSettings()
+
+
 def ConvertTrackerToTransform(trackerNode):
 
     #Checks that the node is a Tracker Node
@@ -33,6 +85,7 @@ def ConvertTrackerToTransform(trackerNode):
 
             #Create a panel that allows users to pick match-move or stabilize transform
             transformOptionPanel = nuke.Panel('Export Node')
+            transformOptionPanel.setTitle("Select Transform")
             transformOptionPanel.addButton('Match-move')
             transformOptionPanel.addButton('Stabilize')
             return transformOptionPanel, transformOptionPanel.show()
@@ -65,3 +118,4 @@ def buildCustomMenu():
     customMenu = menuBar.addMenu("CustomTools")
     customMenu.addCommand("RotoBlur", "CustomTools.rotoBlur()", "o")
     customMenu.addCommand("Convert Tracker to Transform", "CustomTools.ConvertTrackerToTransform(trackerNode = nuke.selectedNode())", "shift+t")
+    customMenu.addCommand("Render Near Comp", "CustomTools.writeOutToCompSaves()", "shift+w")
