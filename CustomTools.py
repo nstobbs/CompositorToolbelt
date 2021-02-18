@@ -1,10 +1,11 @@
 import nuke
+import os
 
 #Create a function that will create a write node ready to render 
 def writeOutToCompSaves():
 
     #Finds the Comp's filepath and creates a write node
-    writeNode = nuke.createNode('Write')
+    writeNode = nuke.nodes.Write(inpanel=False)
     writeNode.showControlPanel()
     writeNode.knob("create_directories").setValue(True)
     rootName = nuke.root().name()
@@ -16,8 +17,7 @@ def writeOutToCompSaves():
         compName_nknc = rootName[(lastSlash+1):len(rootName)]
         compName = compName_nknc.replace(compName_nknc[compName_nknc.rfind("."):], "")
 
-        finalOutputFilePath = folderOfComp + "renders" + "/" + renderType + "/" + compName + "/" + compName + ".####." + renderType
-
+        finalOutputFilePath = os.path.join(folderOfComp + "renders", renderType, compName, compName + ".####." + renderType)
         return finalOutputFilePath
 
     def jpegExportSettings(renderType='jpeg'):
@@ -96,7 +96,10 @@ def ConvertTrackerToTransform(trackerNode):
             ExportNode('Transform (match-move, baked)', 1)
         elif panelResults == 1:
             ExportNode('Transform (stabilize, baked)', 0)
-            
+
+# def updateShuffleNode(shuffleNode):
+#     shuffleNode = nuke.selectedNode()
+#     shuffleNode.knob()  
 
 def rotoBlur():
 
