@@ -124,12 +124,12 @@ def rotoBlur():
     blurNode.setYpos(blurNode.ypos() + 5)
 
 
-def buildCustomMenu():
+def buildCompositorToolbeltMenu():
 
     #Creates the Custom Meun inside of Nuke's UI
     menuBar = nuke.menu("Nuke")
-    customMenu = menuBar.addMenu("CustomTools")
-    customMenu.addCommand("RotoBlur", "CustomTools.rotoBlur()", "o")
-    customMenu.addCommand("Convert Tracker to Transform", "CustomTools.ConvertTrackerToTransform(trackerNode = nuke.selectedNode())", "shift+t")
-    customMenu.addCommand("Render Near Comp", "CustomTools.writeOutToCompSaves()", "shift+w")
-    customMenu.addCommand("Show Output AOV on Shuffle Nodes", "CustomTools.updateShuffleNode()")
+    customMenu = menuBar.addMenu("CompositorToolbelt")
+    customMenu.addCommand("RotoBlur", "CompositorToolbelt.rotoBlur()", "o")
+    customMenu.addCommand("Convert Tracker to Transform", "CompositorToolbelt.ConvertTrackerToTransform(trackerNode = nuke.selectedNode())", "shift+t")
+    customMenu.addCommand("Render Near Comp", "CompositorToolbelt.writeOutToCompSaves()", "shift+w")
+    customMenu.addCommand("Show Output AOV on Shuffle Nodes", "CompositorToolbelt.updateShuffleNode()")
