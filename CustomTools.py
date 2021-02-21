@@ -5,58 +5,57 @@ import os
 #Create a function that will create a write node ready to render 
 def writeOutToCompSaves():
 
-    if nuke.root().name() != "Root":
-        nuke.message('Save the nuke script before writing a file!')
-    else:
-        #Finds the Comp's filepath and creates a write node
-        writeNode = nuke.createNode("Write", inpanel = False)
-        writeNode["create_directories"].setValue(True)
-        rootName = nuke.root().name()
+        rootName = nuke.root()["name"].value()
 
-        def generateFilePath(renderType):
+        #Checks if the script has been saved or not 
+        if not rootName:
+            nuke.message("Save the script before rendering!")
+        else:
+            def generateFilePath(renderType):
+                
+                writeNode = nuke.createNode("Write", inpanel = False)
+                writeNode["create_directories"].setValue(True)
 
-            lastSlash = rootName.rfind('/')
-            folderOfComp = rootName.replace(rootName[(lastSlash+1):len(rootName)], "")
-            compName_nk = rootName[(lastSlash+1):len(rootName)]
-            compName = compName_nk.replace(compName_nk[compName_nk.rfind("."):], "")
+                lastSlash = rootName.rfind('/')
+                folderOfComp = rootName.replace(rootName[(lastSlash+1):len(rootName)], "")
+                compName_nk = rootName[(lastSlash+1):len(rootName)]
+                compName = compName_nk.replace(compName_nk[compName_nk.rfind("."):], "")
 
-            #Checks the Systems and corrects the filepath formatting 
-            finalOutputFilePath = os.path.join(folderOfComp + "renders", renderType, compName, compName + ".####." + renderType)
-            if platform.system != "Darwin":
-                return finalOutputFilePath.replace("\\", "/")
-            else:
-                return finalOutputFilePath
+                #Checks the Systems and corrects the filepath formatting 
+                finalOutputFilePath = os.path.join(folderOfComp + "renders", renderType, compName, compName + ".####." + renderType)
+                if platform.system != "Darwin" or "Linux":
+                    return finalOutputFilePath.replace("\\", "/")
 
-        def jpegExportSettings(renderType='jpeg'):
-            
-            #Changes settings for exporting out jpegs
-            writeNode.knob('file').setValue(generateFilePath(renderType))
-            writeNode.knob('file_type').setValue("jpeg")
-            writeNode.knob('_jpeg_sub_sampling').setValue("4:4:4")
-            writeNode.knob('_jpeg_quality').setValue(1.0)
-            writeNode.knob('Render').execute()
+            def jpegExportSettings(renderType='jpeg'):
+                
+                #Changes settings for exporting out jpegs
+                writeNode.knob('file').setValue(generateFilePath(renderType))
+                writeNode.knob('file_type').setValue("jpeg")
+                writeNode.knob('_jpeg_sub_sampling').setValue("4:4:4")
+                writeNode.knob('_jpeg_quality').setValue(1.0)
+                writeNode.knob('Render').execute()
 
-        def dpxExportSettings(renderType='dpx'):
+            def dpxExportSettings(renderType='dpx'):
 
-            #Changes settings for exporting out DPX
-            writeNode.knob('file').setValue(generateFilePath(renderType))
-            writeNode.knob('file_type').setValue("dpx")
-            writeNode.knob('Render').execute()
+                #Changes settings for exporting out DPX
+                writeNode.knob('file').setValue(generateFilePath(renderType))
+                writeNode.knob('file_type').setValue("dpx")
+                writeNode.knob('Render').execute()
 
-        def buildCustomPanel():
+            def buildCustomPanel():
 
-            writeOutToCompSaveFolderPanel= nuke.Panel('Render Out')
-            writeOutToCompSaveFolderPanel.setTitle("Select file type")
-            writeOutToCompSaveFolderPanel.addButton('JPEG')
-            writeOutToCompSaveFolderPanel.addButton('DPX')
-            return writeOutToCompSaveFolderPanel, writeOutToCompSaveFolderPanel.show()
+                writeOutToCompSaveFolderPanel= nuke.Panel('Render Out')
+                writeOutToCompSaveFolderPanel.setTitle("Select file type")
+                writeOutToCompSaveFolderPanel.addButton('JPEG')
+                writeOutToCompSaveFolderPanel.addButton('DPX')
+                return writeOutToCompSaveFolderPanel, writeOutToCompSaveFolderPanel.show()
 
-        (p,panelResultsWrite) = buildCustomPanel()
+            (p,panelResultsWrite) = buildCustomPanel()
 
-        if panelResultsWrite == 0:
-            jpegExportSettings()
-        elif panelResultsWrite == 1:
-            dpxExportSettings()
+            if panelResultsWrite == 0:
+                jpegExportSettings()
+            elif panelResultsWrite == 1:
+                dpxExportSettings()
 
 
 def ConvertTrackerToTransform(trackerNode):
