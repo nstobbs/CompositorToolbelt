@@ -104,10 +104,13 @@ def ConvertTrackerToTransform(trackerNode):
             ExportNode('Transform (stabilize, baked)', 0)
 
 
-def updateShuffleNode(shuffleNodes = nuke.selectedNodes()):
+def updateShuffleNode():
 
+    shuffleNodes = nuke.selectedNodes()
     for node in shuffleNodes:
-        node['label'].setValue("[value in1]")
+        if "Shuffle" in node['name'].value():
+            node['label'].setValue("[value in1]")
+            node['postage_stamp'].setValue(True)
     
 
 def rotoBlur():
@@ -132,4 +135,4 @@ def buildCompositorToolbeltMenu():
     customMenu.addCommand("RotoBlur", "CompositorToolbelt.rotoBlur()", "o")
     customMenu.addCommand("Convert Tracker to Transform", "CompositorToolbelt.ConvertTrackerToTransform(trackerNode = nuke.selectedNode())", "shift+t")
     customMenu.addCommand("Render Near Comp", "CompositorToolbelt.writeOutToCompSaves()", "shift+w")
-    customMenu.addCommand("Show Output AOV on Shuffle Nodes", "CompositorToolbelt.updateShuffleNode()")
+    customMenu.addCommand("Show Output AOV on Selected Shuffle Nodes", "CompositorToolbelt.updateShuffleNode()")
