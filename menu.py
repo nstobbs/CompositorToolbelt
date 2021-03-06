@@ -10,11 +10,6 @@ print('#' * 79)
 print("Compositor's Toolbelt by github.com/nstobbs")
 
 
-# Gizmos and Plugins Folders
-#--------------------------------------------------
-nuke.pluginAddPath('./Gizmos')
-
-
 #Projects Settings
 #--------------------------------------------------
 nuke.knobDefault("Root.format", "HD_1080")
@@ -32,4 +27,4 @@ nuke.addOnUserCreate(lambda:nuke.thisNode()['size'].setValue(2),
 #Run
 #--------------------------------------------------
 CompositorToolbelt.buildCompositorToolbeltMenu()
-nukescripts.update_plugin_menu("All plugins")
+# nukescripts.update_plugin_menu("All plugins")
