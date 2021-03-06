@@ -1,0 +1,495 @@
+#! C:/Program Files/Nuke11.3v3/nuke-11.3.3.dll -nx
+version 11.3 v3
+Gizmo {
+ inputs 5
+}
+ Input {
+  inputs 0
+  name Input5
+  xpos -678
+  ypos 426
+  number 4
+ }
+ Noise {
+  inputs 0
+  size 1
+  zoffset {{"frame "}}
+  gain 1
+  gamma 1
+  center {960 540}
+  name Noise1
+  xpos -908
+  ypos -461
+ }
+ Crop {
+  box {1919 0 1920 1080}
+  crop false
+  name Crop1
+  xpos -908
+  ypos -413
+ }
+ CheckerBoard2 {
+  inputs 0
+  boxsize 200
+  color0 {{(random(1,frame*1)*1)+0}}
+  color1 {{(random(1,frame*1)*2)+0 x50 0.325}}
+  color2 {{(random(1,frame*1)*1.3)+0}}
+  color3 {{(random(1,frame*1)*3)+0}}
+  centerlinewidth 0
+  name CheckerBoard1
+  xpos -908
+  ypos -772
+ }
+ Clamp {
+  name Clamp1
+  xpos -908
+  ypos -683
+ }
+ Blur {
+  size 12.2
+  name Blur1
+  xpos -908
+  ypos -611
+ }
+ CheckerBoard2 {
+  inputs 0
+  boxsize 200
+  color0 {{(random(1,frame*1)*1)+0}}
+  color1 {{(random(1,frame*1)*2)+0 x50 0.325}}
+  color2 {{(random(1,frame*1)*1.3)+0}}
+  color3 {{(random(1,frame*1)*3)+0}}
+  centerlinewidth 0
+  name CheckerBoard2
+  xpos -908
+  ypos -940
+ }
+ Clamp {
+  name Clamp2
+  xpos -908
+  ypos -851
+ }
+ Noise {
+  inputs 0
+  size 70
+  zoffset {{"frame * 1"}}
+  lacunarity 1
+  gain 1
+  gamma 0.275
+  center {960 540}
+  name Noise3
+  xpos -908
+  ypos -1061
+ }
+ Crop {
+  box {1918.959961 0 1920 1080}
+  crop false
+  name Crop3
+  xpos -908
+  ypos -1013
+ }
+ Noise {
+  inputs 0
+  size 8.4
+  zoffset {{"frame * 1"}}
+  lacunarity 1
+  gain 1
+  gamma 0.22
+  center {960 540}
+  name Noise2
+  xpos -908
+  ypos -1239
+ }
+ Crop {
+  box {1918.959961 0 1920 1080}
+  crop false
+  name Crop2
+  xpos -908
+  ypos -1205
+ }
+ Input {
+  inputs 0
+  name Input1
+  xpos -510
+  ypos -1900
+ }
+ Reformat {
+  name Reformat2
+  xpos -802
+  ypos -1878
+ }
+ NoOp {
+  name NoOp1
+  xpos -802
+  ypos -1841
+  addUserKnob {20 User}
+  addUserKnob {7 amt t "\t\t\t\t\t\t\t" R 1 200}
+  amt 6.5
+ }
+ Reformat {
+  type "to box"
+  box_width {{Input1.width/NoOp1.amt}}
+  box_height {{Input1.height/NoOp1.amt}}
+  box_fixed true
+  name Reformat4
+  selected true
+  xpos -802
+  ypos -1790
+ }
+ Crop {
+  box {0 0 {Reformat4.box_width} {Reformat4.box_height}}
+  name Crop5
+  xpos -798
+  ypos -1719
+ }
+ Reformat {
+  box_fixed true
+  filter Impulse
+  name Reformat5
+  xpos -798
+  ypos -1674
+ }
+ Keyer {
+  range {0.8227128103 0.9115931416 1 1}
+  name Keyer1
+  xpos -798
+  ypos -1628
+ }
+ FilterErode {
+  size 14.5
+  name FilterErode1
+  xpos -798
+  ypos -1580
+ }
+ EdgeBlur {
+  size 0
+  name EdgeBlur1
+  xpos -798
+  ypos -1532
+ }
+ Premult {
+  name Premult1
+  xpos -798
+  ypos -1477
+ }
+ Transform {
+  scale 0.7
+  center {960 540}
+  name Transform5
+  xpos -798
+  ypos -1433
+ }
+ Text2 {
+  font_size_toolbar 100
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message WANTED
+  old_message {{87 65 78 84 69 68}
+    }
+  box {623 885.5 1297 1050.5}
+  transforms {{0 2}
+    }
+  cursor_position 6
+  font {{ Adobe Gothic Std : B : AdobeGothicStd-Bold.otf : 0 }}
+  global_font_scale 1.64
+  center {960 540}
+  cursor_initialised true
+  initial_cursor_position {{623 1050.5}
+    }
+  group_animations {{0} imported: 0 selected: items: "root transform/"}
+  animation_layers {{1 11 960 540 0 0 1 1 0 0 0 0}
+    }
+  color {1 1 1 1}
+  name Text1
+  xpos -798
+  ypos -1373
+  disable true
+ }
+ Text2 {
+  font_size_toolbar 100
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message "- DEAD OR ALIVE - "
+  old_message {{45 32 68 69 65 68 32 79 82 32 65 76 73 86 69 32 45 32}
+    }
+  box {679.5 819.5 1216.5 884.5}
+  transforms {{0 2}
+    }
+  font {{ Adobe Gothic Std : B : AdobeGothicStd-Bold.otf : 0 }}
+  global_font_scale 0.64
+  center {960 540}
+  cursor_initialised true
+  initial_cursor_position {{679.5 884.5}
+    }
+  group_animations {{0} imported: 0 selected: items: "root transform/"}
+  animation_layers {{1 11 960 540 0 0 1 1 0 0 0 0}
+    }
+  name Text2
+  xpos -798
+  ypos -1325
+  disable true
+ }
+ Text2 {
+  font_size_toolbar 100
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message "    100,000 ♦\nCASH REWARD"
+  old_message {{32 32 32 32 49 48 48 44 48 48 48 32 9830 10 67 65 83 72 32 82 69 87 65 82 68}
+    }
+  box {727 21.5 1161 150.5}
+  transforms {{0 2}
+    }
+  cursor_position 4
+  font {{ Adobe Gothic Std : B : AdobeGothicStd-Bold.otf : 0 }}
+  global_font_scale 0.64
+  center {960 540}
+  cursor_initialised true
+  initial_cursor_position {{727 150.5}
+    }
+  group_animations {{0} imported: 0 selected: items: "root transform/"}
+  animation_layers {{1 11 960 540 0 0 1 1 0 0 0 0}
+    }
+  name Text3
+  xpos -798
+  ypos -1253
+  disable true
+ }
+ Copy {
+  inputs 2
+  from0 rgba.blue
+  to0 forward.u
+  from1 rgba.green
+  to1 forward.v
+  name Copy1
+  xpos -798
+  ypos -1218
+ }
+ IDistort {
+  uv forward
+  uv_scale 0.2
+  name IDistort1
+  xpos -798
+  ypos -1139
+ }
+ Copy {
+  inputs 2
+  from0 rgba.blue
+  to0 forward.u
+  from1 rgba.green
+  to1 forward.v
+  name Copy2
+  xpos -798
+  ypos -1026
+ }
+ IDistort {
+  uv forward
+  uv_scale 0.2
+  name IDistort2
+  xpos -798
+  ypos -947
+ }
+ Copy {
+  inputs 2
+  from0 rgba.blue
+  to0 forward.u
+  from1 rgba.green
+  to1 forward.v
+  name Copy3
+  xpos -798
+  ypos -858
+ }
+ IDistort {
+  uv forward
+  uv_offset 1
+  uv_scale 21
+  name IDistort3
+  xpos -798
+  ypos -779
+ }
+ Grade {
+  white {1 1 1 1}
+  white_panelDropped true
+  gamma 1.66
+  name Grade3
+  xpos -798
+  ypos -725
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge1
+  xpos -798
+  ypos -533
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge3
+  xpos -798
+  ypos -389
+ }
+set N3216a400 [stack 0]
+ Glow2 {
+  tint {1 1 1 1}
+  tint_panelDropped true
+  tolerance 0.195
+  brightness 2.68
+  effect_only true
+  size 34.5
+  invert_mask true
+  name Glow1
+  xpos -908
+  ypos -293
+ }
+push $N3216a400
+ Grade {
+  whitepoint 0.23
+  white {1 1 1 4}
+  white_panelDropped true
+  name Grade1
+  xpos -798
+  ypos -293
+ }
+ Merge2 {
+  inputs 2
+  operation plus
+  mix 0.11
+  name Merge2
+  xpos -798
+  ypos -197
+ }
+set N321a1800 [stack 0]
+ Glow2 {
+  brightness 1.28
+  effect_only true
+  size 23
+  invert_mask true
+  name Glow2
+  xpos -798
+  ypos -125
+ }
+push $N321a1800
+ Merge2 {
+  inputs 2
+  operation plus
+  mix 0.735
+  name Merge4
+  xpos -798
+  ypos -53
+ }
+ TransformMasked {
+  channels {rgba.red -rgba.green -rgba.blue none}
+  scale 1.01
+  center {960 540}
+  name Transform4
+  xpos -798
+  ypos 7
+ }
+ FrameBlend {
+  numframes {{(random(10,frame*1)*5)+3}}
+  name FrameBlend1
+  xpos -798
+  ypos 79
+ }
+ Saturation {
+  saturation 0.51
+  name Saturation1
+  xpos -798
+  ypos 157
+ }
+ Glow2 {
+  tint {0.88 0.89 1 1}
+  tint_panelDropped true
+  tolerance 0.32
+  brightness 0.78
+  size 100
+  mix 0.415
+  name Glow3
+  xpos -798
+  ypos 197
+ }
+ Glow2 {
+  tint {0.88 0.89 1 1}
+  tint_panelDropped true
+  brightness 0.06
+  size 300
+  name Glow4
+  xpos -798
+  ypos 238
+ }
+ Crop {
+  box {0 0 1920 1080}
+  name Crop4
+  xpos -798
+  ypos 277
+ }
+ Defocus {
+  defocus 1.7
+  name Defocus1
+  xpos -798
+  ypos 319
+ }
+ Grade {
+  white 0.44
+  name Grade2
+  xpos -798
+  ypos 397
+ }
+set N327b3000 [stack 0]
+ Blur {
+  size 200
+  name Blur2
+  xpos -929
+  ypos 391
+ }
+ Transform {
+  scale {1 4}
+  center {960 540}
+  name Transform3
+  xpos -929
+  ypos 472
+ }
+push $N327b3000
+ Merge2 {
+  inputs 2
+  operation plus
+  mix 0.025
+  name Merge5
+  xpos -798
+  ypos 472
+ }
+set N327b2400 [stack 0]
+ VolumeRays {
+  inputs 2
+  name VolumeRays1
+  label "Mar 20 2005"
+  xpos -678
+  ypos 466
+  blur_size 85
+  vol_pos {858 514}
+  raylength 39.5
+  pre_blur 16
+  quality High
+  flicker_speed 3
+  volume_end_color {0 0 0 0}
+  radial_size 570
+ }
+push $N327b2400
+ Merge2 {
+  inputs 2
+  mix 0.035
+  name Merge6
+  xpos -798
+  ypos 650
+ }
+ Crop {
+  box {0 0 1920 1080}
+  name Crop6
+  xpos -798
+  ypos 693
+ }
+ Output {
+  name Output1
+  xpos -798
+  ypos 793
+ }
+end_group
