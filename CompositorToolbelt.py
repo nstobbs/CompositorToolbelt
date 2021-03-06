@@ -2,12 +2,14 @@ import nuke
 import platform
 import os
 
-#Create a function that will create a write node ready to render 
+# Shift + W Write Function
+#--------------------------------------------------
+# Create a function that will create a write node ready to render 
 def writeOutToCompSaves():
 
         rootName = nuke.root()["name"].value()
 
-        #Checks if the script has been saved or not 
+        # Checks if the script has been saved or not 
         if not rootName:
             nuke.message("Save the script before rendering!")
         else:
@@ -21,14 +23,14 @@ def writeOutToCompSaves():
                 compName_nk = rootName[(lastSlash+1):len(rootName)]
                 compName = compName_nk.replace(compName_nk[compName_nk.rfind("."):], "")
 
-                #Checks the Systems and corrects the filepath formatting 
+                # Checks the Systems and corrects the filepath formatting 
                 finalOutputFilePath = os.path.join(folderOfComp + "renders", renderType, compName, compName + ".####." + renderType)
                 if platform.system != "Darwin" or "Linux":
                     return finalOutputFilePath.replace("\\", "/")
 
             def jpegExportSettings(renderType='jpeg'):
                 
-                #Changes settings for exporting out jpegs
+                # Changes settings for exporting out jpegs
                 writeNode.knob('file').setValue(generateFilePath(renderType))
                 writeNode.knob('file_type').setValue("jpeg")
                 writeNode.knob('_jpeg_sub_sampling').setValue("4:4:4")
@@ -37,7 +39,7 @@ def writeOutToCompSaves():
 
             def dpxExportSettings(renderType='dpx'):
 
-                #Changes settings for exporting out DPX
+                # Changes settings for exporting out DPX
                 writeNode.knob('file').setValue(generateFilePath(renderType))
                 writeNode.knob('file_type').setValue("dpx")
                 writeNode.knob('Render').execute()
@@ -58,9 +60,11 @@ def writeOutToCompSaves():
                 dpxExportSettings()
 
 
+# Shift + T Tracker to Transform Function
+#--------------------------------------------------
 def ConvertTrackerToTransform(trackerNode):
 
-    #Checks that the node is a Tracker Node
+    # Checks that the node is a Tracker Node
     nodeName = trackerNode.name()
     
     try:
@@ -74,22 +78,22 @@ def ConvertTrackerToTransform(trackerNode):
 
         def ExportNode(TransformType, motionBlurAmount):
 
-            #Change the settings of the Tracker to export a Transform Node ()
+            # Change the settings of the Tracker to export a Transform Node ()
             trackerNode.knob("cornerPinOptions").setValue(TransformType)
             trackerNode.knob('createCornerPin').execute()
 
-            #Finds the newly created transform node, Change this to a inner function
+            # Finds the newly created transform node, Change this to a inner function
             setAllNodesInCompAfter = set(nuke.allNodes())
             transformNode = (setAllNodesInCompAfter - setAllNodesInCompBefore) 
             
-            #Turns on motion blur on the Transform node
+            # Turns on motion blur on the Transform node
             for nodes in transformNode:
                 nodes.knob('shutteroffset').setValue('centred')
                 nodes.knob('motionblur').setValue(motionBlurAmount)
 
         def buildTransformOptionPanel():
 
-            #Create a panel that allows users to pick match-move or stabilize transform
+            # Create a panel that allows users to pick match-move or stabilize transform
             transformOptionPanel = nuke.Panel('Export Node')
             transformOptionPanel.setTitle("Select Transform")
             transformOptionPanel.addButton('Match-move')
@@ -103,7 +107,8 @@ def ConvertTrackerToTransform(trackerNode):
         elif panelResults == 1:
             ExportNode('Transform (stabilize, baked)', 0)
 
-
+# AOVS on Shuffle Nodes DAG Function
+#--------------------------------------------------
 def updateShuffleNode():
 
     shuffleNodes = nuke.selectedNodes()
@@ -111,25 +116,28 @@ def updateShuffleNode():
         if "Shuffle" in node['name'].value():
             node['label'].setValue("[value in1]")
             node['postage_stamp'].setValue(True)
-    
 
+# Roto and Blur Nodes 
+#--------------------------------------------------
 def rotoBlur():
 
-    #Creates Roto Node
+    # Creates Roto Node
     rotoNode = nuke.createNode("Roto")
     rotoNode.knob("cliptype").setValue("none")
     rotoNode.knob("replace").setValue(True)
 
-    #Creates Blur Node
+    # Creates Blur Node
     blurNode = nuke.createNode("Blur", inpanel= False)
     blurNode.knob("size").setValue(2)
     blurNode.knob('channels').setValue('alpha')
     blurNode.setYpos(blurNode.ypos() + 5)
 
 
+# Builds Nuke Toolbelt Menu 
+#--------------------------------------------------
 def buildCompositorToolbeltMenu():
 
-    #Creates the Custom Meun inside of Nuke's UI
+    # Creates the Custom Meun inside of Nuke's UI
     menuBar = nuke.menu("Nuke")
     customMenu = menuBar.addMenu("CompositorToolbelt")
     customMenu.addCommand("RotoBlur", "CompositorToolbelt.rotoBlur()", "o")
